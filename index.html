@@ -14,8 +14,6 @@
       --muted:#94a3b8;
       --border:rgba(148,163,184,.18);
       --accent:#60a5fa;
-      --good:#34d399;
-      --warn:#fbbf24;
     }
     *{box-sizing:border-box}
     body{
@@ -24,7 +22,6 @@
       background:var(--bg);
       color:var(--text);
     }
-    a{color:inherit}
     .topbar{
       position:sticky; top:0; z-index:50;
       display:flex; align-items:center; gap:12px;
@@ -117,41 +114,6 @@
       white-space:nowrap;
     }
     .card-b{padding:12px}
-    .img-wrap{
-      border:1px solid var(--border);
-      border-radius:12px;
-      overflow:hidden;
-      background:#000;
-    }
-    .img-wrap img{display:block; width:100%; height:auto}
-    .btn{
-      border:1px solid var(--border);
-      background:transparent;
-      color:var(--text);
-      padding:8px 10px;
-      border-radius:10px;
-      cursor:pointer;
-    }
-    .btn.primary{
-      border-color:rgba(96,165,250,.6);
-      background:rgba(96,165,250,.12);
-    }
-
-    details{
-      border:1px solid var(--border);
-      border-radius:12px;
-      background:rgba(15,23,42,.35);
-      overflow:hidden;
-    }
-    summary{
-      cursor:pointer;
-      padding:10px 12px;
-      list-style:none;
-      font-weight:600;
-    }
-    summary::-webkit-details-marker{display:none}
-    .details-body{padding:0 12px 12px}
-    .hint{color:var(--muted); font-size:13px}
 
     .table-wrap{overflow:auto; border:1px solid var(--border); border-radius:12px; background:rgba(2,6,23,.35)}
     table{border-collapse:separate; border-spacing:0; width:100%; min-width:620px}
@@ -165,26 +127,6 @@
     }
     tr:hover td{background:rgba(148,163,184,.06)}
     td.num{text-align:right; font-variant-numeric: tabular-nums}
-    .pill{padding:2px 8px; border-radius:999px; border:1px solid var(--border); font-size:12px; color:var(--muted)}
-    .pill.good{border-color:rgba(52,211,153,.45); color:#a7f3d0}
-    .pill.warn{border-color:rgba(251,191,36,.45); color:#fde68a}
-
-    dialog{
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:0;
-      width:min(1000px, calc(100vw - 24px));
-      background:rgba(2,6,23,.88);
-      color:var(--text);
-    }
-    dialog::backdrop{background:rgba(0,0,0,.62)}
-    .dlg-h{
-      display:flex; justify-content:space-between; align-items:center;
-      padding:10px 12px; border-bottom:1px solid var(--border);
-      background:rgba(17,26,46,.75);
-    }
-    .dlg-b{padding:12px}
-    .dlg-b img{width:100%; height:auto; display:block; border-radius:12px; border:1px solid var(--border)}
 
     @media (max-width: 980px){
       .sidebar{
@@ -212,7 +154,7 @@
 
 <body>
   <header class="topbar">
-    <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">☰</button>
+    <button class="icon-btn" id="menuBtn" aria-label="Open menu">☰</button>
     <div class="brand" id="appTitle">Last Z Guide</div>
     <div class="spacer"></div>
     <div class="lang">
@@ -238,17 +180,125 @@
 
   <div class="backdrop" id="backdrop" hidden></div>
 
-  <dialog id="imgDialog">
-    <div class="dlg-h">
-      <div id="imgDialogTitle">Image</div>
-      <button class="btn" id="imgDialogClose" type="button">Close</button>
-    </div>
-    <div class="dlg-b">
-      <img id="imgDialogImg" alt="" />
-    </div>
-  </dialog>
-
   <script>
+    // ========== EMBEDDED DATA (from CSV) ==========
+    const ORANGE_D5 = {
+      boots: {
+        hex_levels:["1","2","3","4","5"],
+        power:[369540,472075,574555,677120,779630],
+        basic_hero_atk:[1690,1796,1902,2008,2115],
+        basic_hero_def:[3380,3592,3804,4017,4229],
+        basic_hero_def_pct:[5.3,5.6,5.9,6.2,6.5],
+        promo_levels:[5,10,15,20,25],
+        promo_hero_def:[2203,3507,4810,6114,7417],
+        promo_troop_hp_pct:[4.4,5.8,7.2,8.6,10],
+        enhancement:[
+          {"Enhancement Level":0,"Alloy":null,"Hero DEF":1045,"Hero ATK":522,"Hero DEF%":2.0},
+          {"Enhancement Level":1,"Alloy":5000,"Hero DEF":1087,"Hero ATK":543,"Hero DEF%":2.06},
+          {"Enhancement Level":2,"Alloy":5000,"Hero DEF":1129,"Hero ATK":564,"Hero DEF%":2.12},
+          {"Enhancement Level":3,"Alloy":5000,"Hero DEF":1172,"Hero ATK":585,"Hero DEF%":2.18},
+          {"Enhancement Level":4,"Alloy":5000,"Hero DEF":1214,"Hero ATK":606,"Hero DEF%":2.24},
+          {"Enhancement Level":5,"Alloy":7000,"Hero DEF":1257,"Hero ATK":628,"Hero DEF%":2.3},
+          {"Enhancement Level":6,"Alloy":7000,"Hero DEF":1299,"Hero ATK":649,"Hero DEF%":2.36},
+          {"Enhancement Level":7,"Alloy":7000,"Hero DEF":1342,"Hero ATK":670,"Hero DEF%":2.42},
+          {"Enhancement Level":8,"Alloy":7000,"Hero DEF":1384,"Hero ATK":691,"Hero DEF%":2.48},
+          {"Enhancement Level":9,"Alloy":7000,"Hero DEF":1427,"Hero ATK":713,"Hero DEF%":2.54},
+          {"Enhancement Level":10,"Alloy":10000,"Hero DEF":1469,"Hero ATK":734,"Hero DEF%":2.6},
+          {"Enhancement Level":11,"Alloy":10000,"Hero DEF":1512,"Hero ATK":755,"Hero DEF%":2.66},
+          {"Enhancement Level":12,"Alloy":10000,"Hero DEF":1554,"Hero ATK":776,"Hero DEF%":2.72},
+          {"Enhancement Level":13,"Alloy":10000,"Hero DEF":1596,"Hero ATK":798,"Hero DEF%":2.78},
+          {"Enhancement Level":14,"Alloy":10000,"Hero DEF":1639,"Hero ATK":819,"Hero DEF%":2.84},
+          {"Enhancement Level":15,"Alloy":15000,"Hero DEF":1681,"Hero ATK":840,"Hero DEF%":2.9},
+          {"Enhancement Level":16,"Alloy":15000,"Hero DEF":1724,"Hero ATK":861,"Hero DEF%":2.96},
+          {"Enhancement Level":17,"Alloy":15000,"Hero DEF":1766,"Hero ATK":883,"Hero DEF%":3.02},
+          {"Enhancement Level":18,"Alloy":15000,"Hero DEF":1809,"Hero ATK":904,"Hero DEF%":3.08},
+          {"Enhancement Level":19,"Alloy":15000,"Hero DEF":1851,"Hero ATK":925,"Hero DEF%":3.14},
+          {"Enhancement Level":20,"Alloy":20000,"Hero DEF":1894,"Hero ATK":946,"Hero DEF%":3.2},
+          {"Enhancement Level":21,"Alloy":20000,"Hero DEF":1936,"Hero ATK":968,"Hero DEF%":3.26},
+          {"Enhancement Level":22,"Alloy":20000,"Hero DEF":1979,"Hero ATK":989,"Hero DEF%":3.32},
+          {"Enhancement Level":23,"Alloy":20000,"Hero DEF":2021,"Hero ATK":1010,"Hero DEF%":3.38},
+          {"Enhancement Level":24,"Alloy":20000,"Hero DEF":2064,"Hero ATK":1031,"Hero DEF%":3.44},
+          {"Enhancement Level":25,"Alloy":35000,"Hero DEF":2106,"Hero ATK":1053,"Hero DEF%":3.5},
+          {"Enhancement Level":26,"Alloy":35000,"Hero DEF":2148,"Hero ATK":1074,"Hero DEF%":3.56},
+          {"Enhancement Level":27,"Alloy":35000,"Hero DEF":2191,"Hero ATK":1095,"Hero DEF%":3.62},
+          {"Enhancement Level":28,"Alloy":35000,"Hero DEF":2233,"Hero ATK":1116,"Hero DEF%":3.68},
+          {"Enhancement Level":29,"Alloy":35000,"Hero DEF":2276,"Hero ATK":1138,"Hero DEF%":3.74},
+          {"Enhancement Level":30,"Alloy":70000,"Hero DEF":2318,"Hero ATK":1159,"Hero DEF%":3.8},
+          {"Enhancement Level":31,"Alloy":70000,"Hero DEF":2361,"Hero ATK":1180,"Hero DEF%":3.86},
+          {"Enhancement Level":32,"Alloy":70000,"Hero DEF":2403,"Hero ATK":1201,"Hero DEF%":3.92},
+          {"Enhancement Level":33,"Alloy":70000,"Hero DEF":2446,"Hero ATK":1222,"Hero DEF%":3.98},
+          {"Enhancement Level":34,"Alloy":70000,"Hero DEF":2488,"Hero ATK":1244,"Hero DEF%":4.04},
+          {"Enhancement Level":35,"Alloy":70000,"Hero DEF":2531,"Hero ATK":1265,"Hero DEF%":4.1},
+          {"Enhancement Level":36,"Alloy":70000,"Hero DEF":2573,"Hero ATK":1286,"Hero DEF%":4.16},
+          {"Enhancement Level":37,"Alloy":70000,"Hero DEF":2615,"Hero ATK":1307,"Hero DEF%":4.22},
+          {"Enhancement Level":38,"Alloy":70000,"Hero DEF":2658,"Hero ATK":1329,"Hero DEF%":4.28},
+          {"Enhancement Level":39,"Alloy":70000,"Hero DEF":2700,"Hero ATK":1350,"Hero DEF%":4.34},
+          {"Enhancement Level":40,"Alloy":70000,"Hero DEF":2743,"Hero ATK":1371,"Hero DEF%":4.4},
+          {"Enhancement Level":41,"Alloy":70000,"Hero DEF":2785,"Hero ATK":1392,"Hero DEF%":4.46},
+          {"Enhancement Level":42,"Alloy":70000,"Hero DEF":2828,"Hero ATK":1414,"Hero DEF%":4.52},
+          {"Enhancement Level":43,"Alloy":70000,"Hero DEF":2870,"Hero ATK":1435,"Hero DEF%":4.58},
+          {"Enhancement Level":44,"Alloy":70000,"Hero DEF":2913,"Hero ATK":1456,"Hero DEF%":4.64},
+          {"Enhancement Level":45,"Alloy":70000,"Hero DEF":2955,"Hero ATK":1477,"Hero DEF%":4.7},
+          {"Enhancement Level":46,"Alloy":70000,"Hero DEF":2998,"Hero ATK":1499,"Hero DEF%":4.76},
+          {"Enhancement Level":47,"Alloy":70000,"Hero DEF":3040,"Hero ATK":1520,"Hero DEF%":4.82},
+          {"Enhancement Level":48,"Alloy":70000,"Hero DEF":3082,"Hero ATK":1541,"Hero DEF%":4.88},
+          {"Enhancement Level":49,"Alloy":70000,"Hero DEF":3125,"Hero ATK":1562,"Hero DEF%":4.94},
+          {"Enhancement Level":50,"Alloy":150000,"Hero DEF":3167,"Hero ATK":1584,"Hero DEF%":5.0},
+          {"Enhancement Level":51,"Alloy":150000,"Hero DEF":3210,"Hero ATK":1605,"Hero DEF%":5.06},
+          {"Enhancement Level":52,"Alloy":150000,"Hero DEF":3252,"Hero ATK":1626,"Hero DEF%":5.12},
+          {"Enhancement Level":53,"Alloy":150000,"Hero DEF":3295,"Hero ATK":1647,"Hero DEF%":5.18},
+          {"Enhancement Level":54,"Alloy":150000,"Hero DEF":3337,"Hero ATK":1669,"Hero DEF%":5.24},
+          {"Enhancement Level":55,"Alloy":150000,"Hero DEF":3380,"Hero ATK":1690,"Hero DEF%":5.3},
+          {"Enhancement Level":56,"Alloy":150000,"Hero DEF":3422,"Hero ATK":1711,"Hero DEF%":5.36},
+          {"Enhancement Level":57,"Alloy":150000,"Hero DEF":3465,"Hero ATK":1732,"Hero DEF%":5.42},
+          {"Enhancement Level":58,"Alloy":150000,"Hero DEF":3507,"Hero ATK":1754,"Hero DEF%":5.48},
+          {"Enhancement Level":59,"Alloy":150000,"Hero DEF":3549,"Hero ATK":1775,"Hero DEF%":5.54},
+          {"Enhancement Level":60,"Alloy":150000,"Hero DEF":3592,"Hero ATK":1796,"Hero DEF%":5.6},
+          {"Enhancement Level":61,"Alloy":150000,"Hero DEF":3634,"Hero ATK":1817,"Hero DEF%":5.66},
+          {"Enhancement Level":62,"Alloy":150000,"Hero DEF":3677,"Hero ATK":1838,"Hero DEF%":5.72},
+          {"Enhancement Level":63,"Alloy":150000,"Hero DEF":3719,"Hero ATK":1860,"Hero DEF%":5.78},
+          {"Enhancement Level":64,"Alloy":150000,"Hero DEF":3762,"Hero ATK":1881,"Hero DEF%":5.84},
+          {"Enhancement Level":65,"Alloy":150000,"Hero DEF":3804,"Hero ATK":1902,"Hero DEF%":5.9},
+          {"Enhancement Level":66,"Alloy":150000,"Hero DEF":3847,"Hero ATK":1923,"Hero DEF%":5.96},
+          {"Enhancement Level":67,"Alloy":150000,"Hero DEF":3889,"Hero ATK":1945,"Hero DEF%":6.02},
+          {"Enhancement Level":68,"Alloy":150000,"Hero DEF":3932,"Hero ATK":1966,"Hero DEF%":6.08},
+          {"Enhancement Level":69,"Alloy":150000,"Hero DEF":3974,"Hero ATK":1987,"Hero DEF%":6.14},
+          {"Enhancement Level":70,"Alloy":300000,"Hero DEF":4017,"Hero ATK":2008,"Hero DEF%":6.2},
+          {"Enhancement Level":71,"Alloy":300000,"Hero DEF":4059,"Hero ATK":2030,"Hero DEF%":6.26},
+          {"Enhancement Level":72,"Alloy":300000,"Hero DEF":4101,"Hero ATK":2051,"Hero DEF%":6.32},
+          {"Enhancement Level":73,"Alloy":300000,"Hero DEF":4144,"Hero ATK":2072,"Hero DEF%":6.38},
+          {"Enhancement Level":74,"Alloy":300000,"Hero DEF":4186,"Hero ATK":2093,"Hero DEF%":6.44},
+          {"Enhancement Level":75,"Alloy":300000,"Hero DEF":4229,"Hero ATK":2115,"Hero DEF%":6.5},
+          {"Enhancement Level":76,"Alloy":300000,"Hero DEF":4271,"Hero ATK":2136,"Hero DEF%":6.6},
+          {"Enhancement Level":77,"Alloy":300000,"Hero DEF":4314,"Hero ATK":2157,"Hero DEF%":6.7},
+          {"Enhancement Level":78,"Alloy":300000,"Hero DEF":4356,"Hero ATK":2178,"Hero DEF%":6.8},
+          {"Enhancement Level":79,"Alloy":300000,"Hero DEF":4399,"Hero ATK":2200,"Hero DEF%":6.9},
+          {"Enhancement Level":80,"Alloy":300000,"Hero DEF":4441,"Hero ATK":2221,"Hero DEF%":7.0},
+          {"Enhancement Level":81,"Alloy":300000,"Hero DEF":4484,"Hero ATK":2242,"Hero DEF%":7.1},
+          {"Enhancement Level":82,"Alloy":300000,"Hero DEF":4526,"Hero ATK":2263,"Hero DEF%":7.2},
+          {"Enhancement Level":83,"Alloy":300000,"Hero DEF":4568,"Hero ATK":2285,"Hero DEF%":7.3},
+          {"Enhancement Level":84,"Alloy":300000,"Hero DEF":4611,"Hero ATK":2306,"Hero DEF%":7.4},
+          {"Enhancement Level":85,"Alloy":300000,"Hero DEF":4653,"Hero ATK":2327,"Hero DEF%":7.5},
+          {"Enhancement Level":86,"Alloy":300000,"Hero DEF":4696,"Hero ATK":2348,"Hero DEF%":7.6},
+          {"Enhancement Level":87,"Alloy":300000,"Hero DEF":4738,"Hero ATK":2370,"Hero DEF%":7.7},
+          {"Enhancement Level":88,"Alloy":300000,"Hero DEF":4781,"Hero ATK":2391,"Hero DEF%":7.8},
+          {"Enhancement Level":89,"Alloy":300000,"Hero DEF":4823,"Hero ATK":2412,"Hero DEF%":7.9},
+          {"Enhancement Level":90,"Alloy":450000,"Hero DEF":4866,"Hero ATK":2433,"Hero DEF%":8.0},
+          {"Enhancement Level":91,"Alloy":450000,"Hero DEF":4908,"Hero ATK":2454,"Hero DEF%":8.2},
+          {"Enhancement Level":92,"Alloy":450000,"Hero DEF":4951,"Hero ATK":2476,"Hero DEF%":8.4},
+          {"Enhancement Level":93,"Alloy":450000,"Hero DEF":4993,"Hero ATK":2497,"Hero DEF%":8.6},
+          {"Enhancement Level":94,"Alloy":450000,"Hero DEF":5035,"Hero ATK":2518,"Hero DEF%":8.8},
+          {"Enhancement Level":95,"Alloy":450000,"Hero DEF":5078,"Hero ATK":2539,"Hero DEF%":9.0},
+          {"Enhancement Level":96,"Alloy":450000,"Hero DEF":5120,"Hero ATK":2561,"Hero DEF%":9.2},
+          {"Enhancement Level":97,"Alloy":450000,"Hero DEF":5163,"Hero ATK":2582,"Hero DEF%":9.4},
+          {"Enhancement Level":98,"Alloy":450000,"Hero DEF":5205,"Hero ATK":2603,"Hero DEF%":9.6},
+          {"Enhancement Level":99,"Alloy":450000,"Hero DEF":5248,"Hero ATK":2624,"Hero DEF%":9.8},
+          {"Enhancement Level":100,"Alloy":450000,"Hero DEF":5290,"Hero ATK":2646,"Hero DEF%":10.0}
+        ]
+      }
+    };
+
+    // ========== i18n ==========
     const i18n = {
       en: {
         appTitle: "Last Z Guide",
@@ -261,25 +311,8 @@
           hq: [],
           modVehicle: [],
         },
-        orange: {
-          title: "Orange D5 Equipment",
-          subtitle: "Modern view (cards + expandable tables). Tap an image to zoom.",
-          gearCardsTitle: "Gear sheets",
-          enhanceTitle: "Enhancement cost & stats",
-          promoTitle: "Promotion cost",
-          zoom: "Zoom",
-          close: "Close",
-          note: "If you want, I can convert the numbers into real sortable tables next (you’ll paste/copy the table values).",
-          gear: {
-            weapon: "Weapon",
-            helmet: "Helmet",
-            armor: "Armor + Boots",
-            promo: "Promotion Cost",
-          }
-        },
         placeholder: { title: "Coming soon", body: "Add your info here." }
       },
-
       ja: {
         appTitle: "Last Z ガイド",
         nav: { weapon: "武器", hq: "本部", modVehicle: "改造車" },
@@ -291,33 +324,8 @@
           hq: [],
           modVehicle: [],
         },
-        orange: {
-          title: "オレンジ D5 装備",
-          subtitle: "見やすい表示（カード＋折りたたみ）。画像タップで拡大できます。",
-          gearCardsTitle: "装備シート",
-          enhanceTitle: "強化コスト＆ステータス",
-          promoTitle: "昇格コスト",
-          zoom: "拡大",
-          close: "閉じる",
-          note: "次は、表の数値を貼り付けてもらえれば、並べ替え・検索できる“本物のテーブル”に変換できます。",
-          gear: {
-            weapon: "武器",
-            helmet: "ヘルメット",
-            armor: "アーマー＋ブーツ",
-            promo: "昇格コスト",
-          }
-        },
         placeholder: { title: "準備中", body: "ここに情報を追加してください。" }
       },
-    };
-
-    const ASSETS = {
-      orangeD5: {
-        weapon: "assets/orange-d5/Gun.jpg",
-        helmet: "assets/orange-d5/Helmet.jpg",
-        armorBoots: "assets/orange-d5/Body-and-Boots.jpg",
-        promoCost: "assets/orange-d5/Promotion-Cost.jpg"
-      }
     };
 
     let state = { lang: "en", section: "weapon", tab: "orange" };
@@ -333,13 +341,14 @@
       navModVehicle: document.getElementById("navModVehicle"),
       langEn: document.getElementById("langEn"),
       langJa: document.getElementById("langJa"),
-      imgDialog: document.getElementById("imgDialog"),
-      imgDialogImg: document.getElementById("imgDialogImg"),
-      imgDialogTitle: document.getElementById("imgDialogTitle"),
-      imgDialogClose: document.getElementById("imgDialogClose"),
     };
 
     function t(){ return i18n[state.lang]; }
+
+    function fmt(n){
+      if (n == null || Number.isNaN(n)) return "";
+      return Number.isInteger(n) ? n.toLocaleString() : n.toLocaleString(undefined,{maximumFractionDigits:2});
+    }
 
     function setLang(lang){
       state.lang = lang;
@@ -350,7 +359,6 @@
 
     function setSection(sectionKey){
       state.section = sectionKey;
-      // set first tab if any
       const tabs = t().tabs[sectionKey] || [];
       state.tab = tabs[0]?.key || "default";
       closeSidebar();
@@ -389,86 +397,98 @@
       });
     }
 
-    function openImage(title, src){
-      els.imgDialogTitle.textContent = title;
-      els.imgDialogImg.alt = title;
-      els.imgDialogImg.src = src;
-      // <dialog> provides modal behavior natively. [MDN]
-      els.imgDialog.showModal();
-    }
+    function renderBootsNice(container, lang){
+      const d = ORANGE_D5.boots;
+      const L = (ja,en)=> (lang==="ja"?ja:en);
 
-    function orangeWeaponHtml(){
-      const pack = t().orange;
-
-      return `
-        <h2>${pack.title}</h2>
-        <p>${pack.subtitle}</p>
+      container.innerHTML = `
+        <h2>${L("オレンジ武器 → ブーツ（D5）","Orange Weapon → Boots (D5)")}</h2>
+        <p>${L("CSVから抽出したデータをHTMLに埋め込み、見やすいテーブルにしました。","Data extracted from CSV and embedded into HTML as nice tables.")}</p>
 
         <div class="grid">
           <section class="card span6">
             <div class="card-h">
-              <div class="card-title">${pack.gear.weapon}</div>
-              <button class="btn primary" data-zoom="weapon" type="button">${pack.zoom}</button>
+              <div class="card-title">${L("Power（Hexagon 1–5）","Power (Hexagon 1–5)")}</div>
+              <span class="badge">Boots</span>
             </div>
             <div class="card-b">
-              <div class="img-wrap">
-                <img src="${ASSETS.orangeD5.weapon}" alt="${pack.gear.weapon}" loading="lazy">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Hexagon</th>${d.hex_levels.map(h=>`<th class="num">${h}</th>`).join("")}</tr></thead>
+                  <tbody><tr><td>Power</td>${d.power.map(v=>`<td class="num">${fmt(v)}</td>`).join("")}</tr></tbody>
+                </table>
               </div>
             </div>
           </section>
 
           <section class="card span6">
             <div class="card-h">
-              <div class="card-title">${pack.gear.helmet}</div>
-              <button class="btn primary" data-zoom="helmet" type="button">${pack.zoom}</button>
+              <div class="card-title">Basic</div>
+              <span class="badge">Boots</span>
             </div>
             <div class="card-b">
-              <div class="img-wrap">
-                <img src="${ASSETS.orangeD5.helmet}" alt="${pack.gear.helmet}" loading="lazy">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th></th>${d.hex_levels.map(h=>`<th class="num">${h}</th>`).join("")}</tr></thead>
+                  <tbody>
+                    <tr><td>Hero ATK</td>${d.basic_hero_atk.map(v=>`<td class="num">${fmt(v)}</td>`).join("")}</tr>
+                    <tr><td>Hero DEF</td>${d.basic_hero_def.map(v=>`<td class="num">${fmt(v)}</td>`).join("")}</tr>
+                    <tr><td>Hero DEF%</td>${d.basic_hero_def_pct.map(v=>`<td class="num">${fmt(v)}</td>`).join("")}</tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </section>
 
           <section class="card">
             <div class="card-h">
-              <div class="card-title">${pack.gear.armor}</div>
-              <button class="btn primary" data-zoom="armorBoots" type="button">${pack.zoom}</button>
+              <div class="card-title">Promotion Attributes</div>
+              <span class="badge">Boots</span>
             </div>
             <div class="card-b">
-              <div class="img-wrap">
-                <img src="${ASSETS.orangeD5.armorBoots}" alt="${pack.gear.armor}" loading="lazy">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th></th>${d.promo_levels.map(v=>`<th class="num">${fmt(v)}</th>`).join("")}</tr></thead>
+                  <tbody>
+                    <tr><td>+Levels</td>${d.promo_levels.map(v=>`<td class="num">${fmt(v)}</td>`).join("")}</tr>
+                    <tr><td>Hero DEF</td>${d.promo_hero_def.map(v=>`<td class="num">${fmt(v)}</td>`).join("")}</tr>
+                    <tr><td>Troop HP%</td>${d.promo_troop_hp_pct.map(v=>`<td class="num">${fmt(v)}</td>`).join("")}</tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </section>
 
           <section class="card">
             <div class="card-h">
-              <div class="card-title">${pack.promoTitle}</div>
-              <button class="btn primary" data-zoom="promoCost" type="button">${pack.zoom}</button>
+              <div class="card-title">${L("強化コスト＆ステータス（0–100）","Enhancement Cost & Stats (0–100)")}</div>
+              <span class="badge">101 levels</span>
             </div>
             <div class="card-b">
-              <div class="img-wrap">
-                <img src="${ASSETS.orangeD5.promoCost}" alt="${pack.promoTitle}" loading="lazy">
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th class="num">${L("レベル","Level")}</th>
+                      <th class="num">Alloy</th>
+                      <th class="num">Hero DEF</th>
+                      <th class="num">Hero ATK</th>
+                      <th class="num">Hero DEF%</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${d.enhancement.map(r=>`
+                      <tr>
+                        <td class="num">${fmt(r["Enhancement Level"])}</td>
+                        <td class="num">${fmt(r["Alloy"])}</td>
+                        <td class="num">${fmt(r["Hero DEF"])}</td>
+                        <td class="num">${fmt(r["Hero ATK"])}</td>
+                        <td class="num">${fmt(r["Hero DEF%"])}</td>
+                      </tr>
+                    `).join("")}
+                  </tbody>
+                </table>
               </div>
-              <p class="hint" style="margin-top:10px">${pack.note}</p>
-            </div>
-          </section>
-
-          <section class="card">
-            <div class="card-h">
-              <div class="card-title">${pack.enhanceTitle}</div>
-              <span class="badge">Next step: turn screenshots into real data</span>
-            </div>
-            <div class="card-b">
-              <details>
-                <summary>Weapon / Helmet / Armor / Boots tables</summary>
-                <div class="details-body">
-                  <p class="hint">
-                    Right now your data is inside images, so it can’t be sorted/filtered.
-                    If you paste the values (CSV/text) for one table, I’ll generate a searchable, sortable table UI.
-                  </p>
-                </div>
-              </details>
             </div>
           </section>
         </div>
@@ -477,26 +497,10 @@
 
     function renderContent(){
       if (state.section === "weapon" && state.tab === "orange"){
-        els.content.innerHTML = orangeWeaponHtml();
-
-        els.content.querySelectorAll("[data-zoom]").forEach(btn => {
-          btn.addEventListener("click", () => {
-            const key = btn.getAttribute("data-zoom");
-            const pack = t().orange;
-            const titleMap = {
-              weapon: pack.gear.weapon,
-              helmet: pack.gear.helmet,
-              armorBoots: pack.gear.armor,
-              promoCost: pack.promoTitle
-            };
-            openImage(titleMap[key], ASSETS.orangeD5[key]);
-          });
-        });
-
+        renderBootsNice(els.content, state.lang);
         return;
       }
 
-      // placeholders for other sections
       const ph = t().placeholder;
       els.content.innerHTML = `<h2>${ph.title}</h2><p>${ph.body}</p>`;
     }
@@ -505,21 +509,17 @@
       renderNav();
       renderTabs();
       renderContent();
-      els.imgDialogClose.textContent = t().orange.close;
     }
 
     function openSidebar(){
       document.body.classList.add("sidebar-open");
       els.backdrop.hidden = false;
-      els.menuBtn.setAttribute("aria-expanded","true");
     }
     function closeSidebar(){
       document.body.classList.remove("sidebar-open");
       els.backdrop.hidden = true;
-      els.menuBtn.setAttribute("aria-expanded","false");
     }
 
-    // events
     els.navWeapon.addEventListener("click", () => setSection("weapon"));
     els.navHQ.addEventListener("click", () => setSection("hq"));
     els.navModVehicle.addEventListener("click", () => setSection("modVehicle"));
@@ -532,15 +532,7 @@
     });
 
     els.backdrop.addEventListener("click", closeSidebar);
-    els.imgDialogClose.addEventListener("click", () => els.imgDialog.close());
-    els.imgDialog.addEventListener("click", (e) => {
-      // click outside image to close
-      const rect = els.imgDialog.getBoundingClientRect();
-      const inDialog = (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom);
-      if (!inDialog) els.imgDialog.close();
-    });
 
-    // init
     setLang("en");
     setSection("weapon");
   </script>
