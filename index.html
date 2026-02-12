@@ -146,6 +146,16 @@
     }
     .content p{margin:0 0 10px; color:var(--muted); line-height:1.5; font-size:13px;}
 
+    .info-box{
+      background:rgba(192,192,192,.08);
+      border:1px solid var(--border);
+      border-radius:8px;
+      padding:10px 14px;
+      margin-bottom:14px;
+      font-size:13px;
+      color:var(--accent-hover);
+    }
+
     .grid{
       display:grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -339,8 +349,8 @@
         food: "食料(M)",
         zent: "Zコイン(M)",
         steel: "鋼鉄(M)",
-        building1: "必要建築1",
-        building2: "必要建築2"
+        building1: "必要建物1",
+        building2: "必要建物2"
       }
     };
 
@@ -361,7 +371,11 @@
         },
         gearNames: { weapon: "Gun", helmet: "Helmet", armor: "Armor", boots: "Boots" },
         placeholder: { title: "Coming soon", body: "Add your info here." },
-        hq: { title: "HQ Upgrade Cost & Requirements", subtitle: "Resource requirements and building prerequisites for each HQ level." }
+        hq: { 
+          title: "HQ Upgrade Cost & Requirements", 
+          subtitle: "Resource requirements and building prerequisites for each HQ level.",
+          infoNote: "The RSS needed for building is the amount when using Sophia's 3rd skill bonus"
+        }
       },
       ja: {
         appTitle: "Last Z ガイド",
@@ -379,7 +393,11 @@
         },
         gearNames: { weapon: "機関銃", helmet: "ヘルメット", armor: "重装甲", boots: "パワーブーツ" },
         placeholder: { title: "準備中", body: "ここに情報を追加してください。" },
-        hq: { title: "本部アップグレードコスト", subtitle: "各本部レベルに必要な資源と建築前提条件。" }
+        hq: { 
+          title: "本部アップグレードコスト", 
+          subtitle: "各本部レベルに必要な資源と建築前提条件。",
+          infoNote: "必要な資源数はソフィアのスキル3を使った場合の数になります"
+        }
       },
     };
 
@@ -602,6 +620,10 @@
         <h2>${t().hq.title}</h2>
         <p>${t().hq.subtitle}</p>
 
+        <div class="info-box">
+          ${t().hq.infoNote}
+        </div>
+
         <div class="grid">
           <section class="card">
             <div class="card-h">
@@ -694,7 +716,7 @@
 
     els.backdrop.addEventListener("click", closeSidebar);
 
-    setLang("ja"); // Default to Japanese
+    setLang("ja");
     setSection("weapon");
   </script>
 </body>
